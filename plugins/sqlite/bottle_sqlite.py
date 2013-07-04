@@ -94,7 +94,7 @@ class SQLitePlugin(object):
                 raise
             except HTTPResponse, e:
                 if autocommit: db.commit()
-                raise 
+                raise
             finally:
                 db.close()
             return rv
