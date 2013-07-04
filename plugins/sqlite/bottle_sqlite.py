@@ -27,14 +27,14 @@ Usage Example::
 '''
 
 __author__ = "Marcel Hellkamp"
-__version__ = '0.1.1'
+__version__ = '0.1.2'
 __license__ = 'MIT'
 
 ### CUT HERE (see setup.py)
 
 import sqlite3
 import inspect
-from bottle import HTTPError, PluginError
+from bottle import HTTPResponse, HTTPError, PluginError
 
 
 class SQLitePlugin(object):
@@ -90,6 +90,11 @@ class SQLitePlugin(object):
             except sqlite3.IntegrityError, e:
                 db.rollback()
                 raise HTTPError(500, "Database Error", e)
+            except HTTPError, e:
+                raise
+            except HTTPResponse, e:
+                if autocommit: db.commit()
+                raise 
             finally:
                 db.close()
             return rv
